@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasySpace</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Space Grotesk per intestazioni futuristiche + Inter per leggibilità -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#07080d',
+                            card: '#0f111a',
+                            border: '#1b1e2e',
+                            purple: '#b624ff',
+                            pink: '#ff2975',
+                            cyan: '#00f2fe',
+                            yellow: '#ffd000'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'morph': 'morph 8s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(3deg)' },
+                        },
+                        morph: {
+                            '0%, 100%': { borderRadius: '42% 58% 70% 30% / 45% 45% 55% 55%' },
+                            '50%': { borderRadius: '70% 30% 52% 48% / 60% 40% 60% 40%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            overflow-x: hidden;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #07080d;
+            color: #f3f4f6;
+        }
+        
+        /* Neomorphism / Cyber-Glow styling */
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(182, 36, 255, 0.15);
+            border-color: rgba(182, 36, 255, 0.3);
+        }
+        .glow-pink {
+            box-shadow: 0 0 20px rgba(255, 41, 117, 0.15);
+            border-color: rgba(255, 41, 117, 0.3);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+            border-color: rgba(0, 242, 254, 0.3);
+        }
+        .glow-yellow {
+            box-shadow: 0 0 20px rgba(255, 208, 0, 0.15);
+            border-color: rgba(255, 208, 0, 0.3);
+        }
+
+        /* Ambient Glow Orbs behind content */
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.18;
+            pointer-events: none;
+            z-index: 0;
+        }
+    /* ── GALLERY PANELS ── */
+    .i4-panels{display:flex;gap:4px;height:520px;overflow:hidden;border-radius:16px}
+    .i4-panel{flex:1;position:relative;overflow:hidden;cursor:pointer;transition:flex .65s cubic-bezier(.16,1,.3,1)}
+    .i4-panel.open{flex:2.8}
+    .i4-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+    .i4-panel:nth-child(1) .i4-bg{background-image:linear-gradient(160deg,#1a0630,#0f0320)}
+    .i4-panel:nth-child(2) .i4-bg{background-image:linear-gradient(160deg,#300615,#200310)}
+    .i4-panel:nth-child(3) .i4-bg{background-image:linear-gradient(160deg,#031828,#020c18)}
+    .i4-panel:hover .i4-bg{transform:scale(1.04)}
+    .i4-veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,8,13,.96) 0%,rgba(7,8,13,.5) 55%,rgba(7,8,13,.15) 100%);transition:background .5s}
+    .i4-panel.open .i4-veil{background:linear-gradient(to top,rgba(7,8,13,.98) 0%,rgba(7,8,13,.75) 55%,rgba(7,8,13,.3) 100%)}
+    .i4-front{position:absolute;inset:0;padding:2rem;display:flex;flex-direction:column;justify-content:space-between;transition:opacity .25s}
+    .i4-panel.open .i4-front{opacity:0;pointer-events:none}
+    .i4-num{font-size:.68rem;font-weight:700;color:rgba(182,36,255,.3);letter-spacing:.1em;font-family:'Space Grotesk',sans-serif}
+    .i4-q{font-size:clamp(1.3rem,2vw,1.7rem);font-weight:800;color:#fff;line-height:1.1;font-family:'Space Grotesk',sans-serif}
+    .i4-hint{align-self:flex-end;display:flex;align-items:center;gap:.5rem;font-size:.68rem;color:rgba(255,255,255,.3)}
+    .i4-hint-ic{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:rgba(255,255,255,.35);transition:border-color .3s,color .3s,transform .4s cubic-bezier(.16,1,.3,1)}
+    .i4-panel:hover .i4-hint-ic{border-color:#b624ff;color:#b624ff;transform:rotate(45deg)}
+    .i4-back{position:absolute;bottom:0;left:0;right:0;padding:2.5rem 2.2rem;opacity:0;transform:translateY(14px);transition:opacity .4s .22s,transform .4s .22s;pointer-events:none}
+    .i4-panel.open .i4-back{opacity:1;transform:none;pointer-events:all}
+    .i4-cat{display:block;font-size:.65rem;color:#00f2fe;letter-spacing:.16em;text-transform:uppercase;margin-bottom:.9rem;font-weight:700}
+    .i4-back h3{font-size:clamp(1.3rem,1.8vw,1.7rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:.9rem;font-family:'Space Grotesk',sans-serif}
+    .i4-back p{font-size:.875rem;color:rgba(255,255,255,.55);line-height:1.72;margin-bottom:1.6rem}
+    .i4-link{display:inline-flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:700;padding:.75rem 1.8rem;background:linear-gradient(135deg,#b624ff,#ff2975);color:#fff;border-radius:50px;text-decoration:none;transition:opacity .2s,transform .2s}
+    .i4-link:hover{opacity:.88;transform:translateY(-2px)}
+    @media(max-width:700px){.i4-panels{flex-direction:column;height:auto}.i4-panel{flex:none;height:160px}.i4-panel.open{flex:none;height:400px}}
+
+    /* ── SCROLLBAR CUSTOM ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #07080d; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #b624ff 0%, #ff2975 100%);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #c940ff 0%, #ff4d8a 100%);
+    }
+    /* Firefox */
+    * { scrollbar-width: thin; scrollbar-color: #b624ff #07080d; }
+
+    /* ── MOBILE MENU ── */
+    #mob-menu{position:fixed;inset:0;z-index:200;background:rgba(7,8,13,.97);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+    #mob-menu.open{transform:none}
+    .mob-lnk{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:#4b5563;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;transition:color .2s}
+    .mob-lnk:hover{color:#fff}
+    #mob-brg{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+    #mob-brg span{width:22px;height:2px;background:#fff;border-radius:2px;display:block;transition:.35s cubic-bezier(.16,1,.3,1)}
+    #mob-brg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+    #mob-brg.open span:nth-child(2){opacity:0;transform:translateX(-8px)}
+    #mob-brg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+    @media(max-width:768px){#mob-brg{display:flex;position:fixed;top:1.2rem;right:1.4rem;z-index:400}}
+
+    /* ── INTRO ANIMATION ── */
+    #intro {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 9999;
+      background: #07080d;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2rem;
+      transition: transform 1.1s cubic-bezier(.76,0,.24,1), opacity .4s ease .9s;
+      overflow: hidden;
+    }
+    #intro.hide {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    /* ambient glow nel background dell'intro */
+    #intro::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 400px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(182,36,255,.12) 0%, rgba(255,41,117,.06) 40%, transparent 70%);
+      filter: blur(40px);
+      animation: introGlow 3s ease-in-out infinite;
+    }
+    @keyframes introGlow {
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity: .7; }
+      50%      { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+    }
+
+    .intro-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 7vw, 3.2rem);
+      font-weight: 800; letter-spacing: -.02em;
+      color: #fff; position: relative; z-index: 1;
+      opacity: 0; transform: translateY(12px);
+      animation: introUp .8s cubic-bezier(.16,1,.3,1) .2s forwards;
+    }
+    .intro-logo .grad {
+      background: linear-gradient(90deg, #b624ff 0%, #ff2975 50%, #00f2fe 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .intro-line {
+      width: 0; height: 1.5px;
+      background: linear-gradient(90deg, transparent, #b624ff, #ff2975, #00f2fe, transparent);
+      position: relative; z-index: 1;
+      animation: introLine 1s cubic-bezier(.16,1,.3,1) .8s forwards;
+    }
+    @keyframes introLine { to { width: clamp(160px, 40vw, 320px); } }
+
+    .intro-sub {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(.55rem, 1.5vw, .7rem);
+      font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+      color: rgba(255,255,255,.3); position: relative; z-index: 1;
+      opacity: 0;
+      animation: introUp .6s ease 1.2s forwards;
+    }
+    @keyframes introUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    </style>
+</head>
+<body class="selection:bg-cyber-pink selection:text-white">
+
+    <!-- INTRO SCREEN -->
+    <div id="intro">
+      <div class="intro-logo">
+        <span class="grad">&lt;</span>EasySpace<span class="grad">&gt;</span>
+      </div>
+      <div class="intro-line"></div>
+      <div class="intro-sub">Sviluppo Web &amp; Software</div>
+    </div>
+
+    <!-- Sfondi di luce soffusa (Ambient Glows) -->
+    <div class="ambient-orb top-20 left-10 w-96 h-96 bg-cyber-purple"></div>
+    <div class="ambient-orb top-[40%] right-10 w-[450px] h-[450px] bg-cyber-pink"></div>
+    <div class="ambient-orb bottom-20 left-1/4 w-[500px] h-[500px] bg-cyber-cyan"></div>
+
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-cyber-bg/85 border-b border-cyber-border/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <!-- Logo Monogramma Futuristico -->
+                <div class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-cyber-purple via-cyber-pink to-cyber-cyan p-[2px] shadow-lg shadow-cyber-purple/20">
+                    <div class="w-full h-full bg-cyber-bg rounded-[10px] flex items-center justify-center font-display font-extrabold text-white text-base">
+                        ES
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold tracking-wider text-sm text-white uppercase group-hover:text-cyber-cyan transition-colors">
+                        &lt;EasySpace&gt;
+                    </span>
+                    <span class="text-[10px] text-gray-500 tracking-widest uppercase">Sviluppo Web &amp; Software</span>
+                </div>
+            </a>
+            
+            <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <a href="#chi-sono" class="hover:text-white transition-colors">Chi Sono</a>
+                <a href="#servizi" class="hover:text-cyber-pink transition-colors">Servizi</a>
+                <a href="#processo" class="hover:text-cyber-purple transition-colors">Processo</a>
+                <a href="#template" class="hover:text-cyber-cyan transition-colors">Demo</a>
+                <a href="#assistenza" class="hover:text-cyber-yellow transition-colors">Assistenza</a>
+                <a href="#contatti" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyber-purple to-cyber-pink text-white font-bold hover:shadow-lg hover:shadow-cyber-pink/20 transition-all duration-300">
+                    Contattami
+                </a>
+            </nav>
+
+            <!-- Burger (mobile) -->
+            <button id="mob-brg" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile menu overlay -->
+    <div id="mob-menu">
+        <button id="mob-close" data-mob aria-label="Chiudi menu" style="position:absolute;top:1.4rem;right:1.5rem;background:none;border:none;cursor:pointer;color:#fff;font-size:2rem;line-height:1;padding:4px;opacity:.7">✕</button>
+        <a href="#chi-sono"  class="mob-lnk" data-mob>Chi Sono</a>
+        <a href="#servizi"   class="mob-lnk" data-mob>Servizi</a>
+        <a href="#processo"  class="mob-lnk" data-mob>Processo</a>
+        <a href="#template"  class="mob-lnk" data-mob>Demo</a>
+        <a href="#assistenza" class="mob-lnk" data-mob>Assistenza</a>
+        <a href="#contatti"
+           class="px-8 py-4 rounded-full bg-gradient-to-r from-cyber-purple to-cyber-pink text-white font-extrabold text-sm tracking-widest uppercase"
+           data-mob>Contattami</a>
+    </div>
+
+    <main class="relative z-10 max-w-7xl mx-auto px-6">
+        
+        <!-- HERO SECTION -->
+        <section id="chi-sono" class="py-16 md:py-28 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 space-y-7 text-left">
+                
+                <h1 class="font-display text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.1] text-white">
+                    SVILUPPO SOFTWARE<br>
+                    <span class="bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan bg-clip-text text-transparent">
+                        CHE FA LA<br>DIFFERENZA.
+                    </span>
+                </h1>
+
+                <p class="text-gray-400 text-base sm:text-lg max-w-xl leading-relaxed">
+                    Sviluppo di siti web professionali, app mobile e soluzioni software su misura per aziende e professionisti. Prodotti digitali di alto livello, pensati per distinguere il tuo business.
+                </p>
+
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#contatti" class="px-8 py-4 rounded-full bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan text-white font-extrabold text-sm tracking-wider uppercase shadow-lg shadow-cyber-pink/25 hover:opacity-90 active:scale-95 transition-all">
+                        Contattami
+                    </a>
+                </div>
+            </div>
+
+            <!-- Colonna Destra: Nastro Magnetico 3D Vettoriale Animato -->
+            <div class="lg:col-span-5 flex justify-center items-center relative py-10">
+                <!-- Cerchio di sfondo luminoso -->
+                <div class="absolute w-72 h-72 bg-cyber-pink/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+                
+                <!-- Nastro Astratto Intrecciato -->
+                <svg class="w-full max-w-[380px] h-auto animate-float" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradient-ribbon-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#b624ff" />
+                            <stop offset="50%" stop-color="#ff2975" />
+                            <stop offset="100%" stop-color="#00f2fe" />
+                        </linearGradient>
+                        <linearGradient id="gradient-ribbon-2" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#ffd000" />
+                            <stop offset="50%" stop-color="#ff2975" />
+                            <stop offset="100%" stop-color="#b624ff" />
+                        </linearGradient>
+                        <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="12" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    
+                    <!-- Nastro Retro Glow -->
+                    <path d="M100,200 C100,100 300,100 300,200 C300,300 100,300 100,200 Z" stroke="url(#gradient-ribbon-1)" stroke-width="24" stroke-linecap="round" fill="none" filter="url(#neon-glow)" opacity="0.4" class="animate-spin-slow" style="transform-origin: center;"/>
+                    <path d="M150,200 C150,130 250,130 250,200 C250,270 150,270 150,200 Z" stroke="url(#gradient-ribbon-2)" stroke-width="12" stroke-linecap="round" fill="none" filter="url(#neon-glow)" opacity="0.6" class="animate-pulse" style="transform-origin: center;"/>
+
+                    <!-- Nastro Principale Definito -->
+                    <g class="animate-spin-slow" style="transform-origin: center;">
+                        <path d="M100,200 C100,80 300,80 300,200 C300,320 100,320 100,200 Z" stroke="url(#gradient-ribbon-1)" stroke-width="16" stroke-linecap="round" fill="none" />
+                        <path d="M120,200 C120,110 280,110 280,200 C280,290 120,290 120,200 Z" stroke="url(#gradient-ribbon-2)" stroke-width="6" stroke-linecap="round" fill="none" />
+                    </g>
+
+                    <!-- Orbiting spheres -->
+                    <circle cx="280" cy="120" r="10" fill="#00f2fe" class="animate-bounce" style="animation-duration: 3s;"/>
+                    <circle cx="110" cy="270" r="6" fill="#ff2975" class="animate-bounce" style="animation-duration: 4.5s;"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- SEZIONE SERVIZI CREATIVI -->
+        <section id="servizi" class="py-20 border-t border-cyber-border/60">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-cyber-cyan font-bold font-display">Competenze & Stack</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white mt-3">SERVIZI DIGITALI</h2>
+                <div class="h-[2px] w-24 bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                <!-- Card 1: Siti Vetrina -->
+                <div class="p-8 bg-cyber-card border rounded-2xl glow-purple hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-purple/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                    <div class="w-12 h-12 rounded-xl bg-cyber-purple/10 text-cyber-purple flex items-center justify-center mb-6">
+                        <i data-lucide="layout" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-3">SITI VETRINA EVOLUTI</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Design personalizzato d'avanguardia per catturare l'attenzione ed elevare il valore del tuo business sin dal primo click.
+                    </p>
+                </div>
+
+                <!-- Card 2: Web App & E-Commerce -->
+                <div class="p-8 bg-cyber-card border rounded-2xl glow-pink hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-pink/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                    <div class="w-12 h-12 rounded-xl bg-cyber-pink/10 text-cyber-pink flex items-center justify-center mb-6">
+                        <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-3">WEB APP & E-COMMERCE</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Piattaforme interattive e negozi online veloci. Ottimizzati per vendere senza intermediari e azzerare le commissioni di terzi.
+                    </p>
+                </div>
+
+                <!-- Card 3: Brand Identity -->
+                <div class="p-8 bg-cyber-card border rounded-2xl glow-cyan hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-cyan/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                    <div class="w-12 h-12 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center mb-6">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-3">BRAND IDENTITY DIGITALE</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Loghi moderni, grafiche coordinate e identità visuale unica per farti ricordare istantaneamente sul mercato.
+                    </p>
+                </div>
+
+                <!-- Card 4: Consulenza Tecnica -->
+                <div class="p-8 bg-cyber-card border rounded-2xl glow-yellow hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-yellow/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                    <div class="w-12 h-12 rounded-xl bg-cyber-yellow/10 text-cyber-yellow flex items-center justify-center mb-6">
+                        <i data-lucide="cpu" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-3">CONSULENZA TECNICA</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Risoluzione problemi, hosting gratuito, ottimizzazione SEO e strategie digitali pensate per massimizzare i profitti.
+                    </p>
+                </div>
+
+                <!-- Card 5: SEO & Test -->
+                <div class="p-8 bg-cyber-card border rounded-2xl glow-cyan hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-cyan/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                    <div class="w-12 h-12 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center mb-6">
+                        <i data-lucide="search" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-3">SEO & OTTIMIZZAZIONE</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Posizionamento Google, structured data, Core Web Vitals e test su ogni dispositivo. Il tuo sito si trova e funziona ovunque.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- COME LAVORIAMO (Step con blob fluidi) -->
+        <section id="processo" class="py-20 border-t border-cyber-border/60">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-cyber-pink font-bold font-display">Il Metodo</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white mt-3">COME LAVORIAMO</h2>
+                <div class="h-[2px] w-24 bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-28 h-28 bg-gradient-to-br from-cyber-cyan to-blue-600 rounded-full flex items-center justify-center text-black font-display font-extrabold text-3xl shadow-lg shadow-cyber-cyan/20 animate-morph mb-6">
+                        <i data-lucide="handshake" class="w-10 h-10 text-black"></i>
+                    </div>
+                    <span class="text-xs text-cyber-cyan font-bold tracking-widest uppercase mb-1">Fase 1</span>
+                    <h4 class="font-display font-bold text-lg text-white mb-2">1. Incontro</h4>
+                    <p class="text-gray-400 text-xs max-w-xs leading-relaxed">
+                        Pianifichiamo un incontro o una videochiamata per analizzare a fondo i tuoi obiettivi di business.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-28 h-28 bg-gradient-to-br from-cyber-yellow to-orange-500 rounded-full flex items-center justify-center text-black font-display font-extrabold text-3xl shadow-lg shadow-cyber-yellow/20 animate-morph mb-6" style="animation-delay: 1.5s;">
+                        <i data-lucide="lightbulb" class="w-10 h-10 text-black"></i>
+                    </div>
+                    <span class="text-xs text-cyber-yellow font-bold tracking-widest uppercase mb-1">Fase 2</span>
+                    <h4 class="font-display font-bold text-lg text-white mb-2">2. Idea</h4>
+                    <p class="text-gray-400 text-xs max-w-xs leading-relaxed">
+                        Viene progettata una bozza grafica e funzionale personalizzata, allineata all'identità del tuo brand.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-28 h-28 bg-gradient-to-br from-cyber-purple to-pink-600 rounded-full flex items-center justify-center text-white font-display font-extrabold text-3xl shadow-lg shadow-cyber-purple/20 animate-morph mb-6" style="animation-delay: 3s;">
+                        <i data-lucide="terminal" class="w-10 h-10 text-white"></i>
+                    </div>
+                    <span class="text-xs text-cyber-purple font-bold tracking-widest uppercase mb-1">Fase 3</span>
+                    <h4 class="font-display font-bold text-lg text-white mb-2">3. Sviluppo</h4>
+                    <p class="text-gray-400 text-xs max-w-xs leading-relaxed">
+                        Codice pulito, leggero e ultra-veloce. Il progetto viene ottimizzato per ogni dispositivo e browser.
+                    </p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-28 h-28 bg-gradient-to-br from-cyber-pink to-red-500 rounded-full flex items-center justify-center text-white font-display font-extrabold text-3xl shadow-lg shadow-cyber-pink/20 animate-morph mb-6" style="animation-delay: 4.5s;">
+                        <i data-lucide="rocket" class="w-10 h-10 text-white"></i>
+                    </div>
+                    <span class="text-xs text-cyber-pink font-bold tracking-widest uppercase mb-1">Fase 4</span>
+                    <h4 class="font-display font-bold text-lg text-white mb-2">4. Lancio</h4>
+                    <p class="text-gray-400 text-xs max-w-xs leading-relaxed">
+                        Il progetto viene pubblicato, ottimizzato per i motori di ricerca e consegnato pronto a ricevere contatti.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE RISULTATI RECENTI -->
+        <section id="progetti" class="py-20 border-t border-cyber-border/60">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-cyber-purple font-bold font-display">Portfolio</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white mt-3">RISULTATI RECENTI</h2>
+                <div class="h-[2px] w-24 bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-cyber-card border border-cyber-border rounded-2xl overflow-hidden opacity-60">
+                    <div class="p-4 bg-[#11131e] border-b border-cyber-border flex items-center justify-between">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                        </div>
+                        <span class="text-[10px] text-gray-600 font-mono">prossimamente...</span>
+                        <div class="w-4"></div>
+                    </div>
+                    <div class="p-6 h-56 bg-gradient-to-br from-[#120f26] to-[#07080d] flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-12 -bottom-12 w-44 h-44 bg-cyber-purple/10 rounded-full filter blur-2xl"></div>
+                        <div class="space-y-3">
+                            <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Progetto in arrivo</span>
+                            <h4 class="font-display font-extrabold text-lg text-gray-600">— — — — — —</h4>
+                            <p class="text-gray-600 text-xs max-w-[200px]">Il primo progetto reale sarà pubblicato qui non appena completato.</p>
+                        </div>
+                        <div class="flex justify-between items-center z-10">
+                            <span class="text-[10px] text-cyber-purple/50 bg-cyber-purple/5 px-2 py-1 rounded font-bold uppercase">Disponibile a breve</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-cyber-card border border-cyber-border rounded-2xl overflow-hidden opacity-60">
+                    <div class="p-4 bg-[#11131e] border-b border-cyber-border flex items-center justify-between">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                        </div>
+                        <span class="text-[10px] text-gray-600 font-mono">prossimamente...</span>
+                        <div class="w-4"></div>
+                    </div>
+                    <div class="p-6 h-56 bg-gradient-to-br from-[#240c1a] to-[#07080d] flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-12 -bottom-12 w-44 h-44 bg-cyber-pink/10 rounded-full filter blur-2xl"></div>
+                        <div class="space-y-3">
+                            <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Progetto in arrivo</span>
+                            <h4 class="font-display font-extrabold text-lg text-gray-600">— — — — — —</h4>
+                            <p class="text-gray-600 text-xs max-w-[200px]">Nuovi progetti vengono aggiunti man mano che vengono completati.</p>
+                        </div>
+                        <div class="flex justify-between items-center z-10">
+                            <span class="text-[10px] text-cyber-pink/50 bg-cyber-pink/5 px-2 py-1 rounded font-bold uppercase">Disponibile a breve</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-cyber-card border border-cyber-border rounded-2xl overflow-hidden opacity-60">
+                    <div class="p-4 bg-[#11131e] border-b border-cyber-border flex items-center justify-between">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                        </div>
+                        <span class="text-[10px] text-gray-600 font-mono">prossimamente...</span>
+                        <div class="w-4"></div>
+                    </div>
+                    <div class="p-6 h-56 bg-gradient-to-br from-[#0c1d24] to-[#07080d] flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-12 -bottom-12 w-44 h-44 bg-cyber-cyan/10 rounded-full filter blur-2xl"></div>
+                        <div class="space-y-3">
+                            <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Progetto in arrivo</span>
+                            <h4 class="font-display font-extrabold text-lg text-gray-600">— — — — — —</h4>
+                            <p class="text-gray-600 text-xs max-w-[200px]">Stai costruendo qualcosa di bello? Potrebbe essere il prossimo caso studio.</p>
+                        </div>
+                        <div class="flex justify-between items-center z-10">
+                            <span class="text-[10px] text-cyber-cyan/50 bg-cyber-cyan/5 px-2 py-1 rounded font-bold uppercase">Disponibile a breve</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEMPLATE GALLERY -->
+        <section id="template" class="py-20 border-t border-cyber-border/60">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs uppercase tracking-widest text-cyber-cyan font-bold font-display">Lasciati Ispirare</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white mt-3">TEMPLATE & DEMO</h2>
+                <div class="h-[2px] w-24 bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan mx-auto mt-4"></div>
+                <p class="text-gray-400 text-sm mt-6 max-w-xl mx-auto">Ogni progetto è costruito da zero. Clicca su un template per scoprire cosa posso fare per te.</p>
+            </div>
+            <div class="i4-panels">
+                <div class="i4-panel">
+                    <div class="i4-bg" style="/* background-image: url('img/p1.jpg') */"></div>
+                    <div class="i4-veil"></div>
+                    <div class="i4-front">
+                        <span class="i4-num">01</span>
+                        <h3 class="i4-q">Hai una<br/>Pizzeria?</h3>
+                        <div class="i4-hint"><span>Scopri</span><span class="i4-hint-ic">+</span></div>
+                    </div>
+                    <div class="i4-back">
+                        <span class="i4-cat">Ristorazione · Bar · Pizzeria</span>
+                        <h3>Demo Pizzeria</h3>
+                        <p>Menù digitale a tab, galleria, orari e prenotazione tavolo. Dark e caldo, ottimizzato mobile.</p>
+                        <a href="https://pizzeria-demot.netlify.app/" target="_blank" rel="noopener" class="i4-link">Vedi il demo →</a>
+                    </div>
+                </div>
+                <div class="i4-panel">
+                    <div class="i4-bg" style="/* background-image: url('img/p2.jpg') */"></div>
+                    <div class="i4-veil"></div>
+                    <div class="i4-front">
+                        <span class="i4-num">02</span>
+                        <h3 class="i4-q">Sei un<br/>Professionista?</h3>
+                        <div class="i4-hint"><span>Scopri</span><span class="i4-hint-ic">+</span></div>
+                    </div>
+                    <div class="i4-back">
+                        <span class="i4-cat">Freelancer · Coach · Consulenti</span>
+                        <h3>Demo Consulente</h3>
+                        <p>Hero editoriale, servizi, metodo e contatti. Light premium, converte subito.</p>
+                        <a href="https://consultant-demo.netlify.app/" target="_blank" rel="noopener" class="i4-link">Vedi il demo →</a>
+                    </div>
+                </div>
+                <div class="i4-panel">
+                    <div class="i4-bg" style="/* background-image: url('img/p3.jpg') */"></div>
+                    <div class="i4-veil"></div>
+                    <div class="i4-front">
+                        <span class="i4-num">03</span>
+                        <h3 class="i4-q">Hai un<br/>Ristorante?</h3>
+                        <div class="i4-hint"><span>Scopri</span><span class="i4-hint-ic">+</span></div>
+                    </div>
+                    <div class="i4-back">
+                        <span class="i4-cat">Ristorante · Fine Dining · Hotel</span>
+                        <h3>Demo Ristorante</h3>
+                        <p>Menu degustazione, chef, galleria e prenotazione. Lusso ed eleganza in ogni dettaglio.</p>
+                        <a href="https://resturant-demot.netlify.app/" target="_blank" rel="noopener" class="i4-link">Vedi il demo →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE ASSISTENZA CLIENTI -->
+        <section id="assistenza" class="py-20 border-t border-cyber-border/60">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-cyber-yellow font-bold font-display">Sempre Presente</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white mt-3">ASSISTENZA CLIENTI</h2>
+                <div class="h-[2px] w-24 bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan mx-auto mt-4"></div>
+                <p class="text-gray-400 mt-4 text-sm max-w-lg mx-auto">
+                    Il lancio del sito è solo l'inizio. Avrai un consulente tecnico reale e reperibile, senza ticket lenti o risponditori automatici.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Servizio Assistenza 1: H24 Emergenze -->
+                <div class="bg-cyber-card border border-cyber-border/80 rounded-2xl p-8 relative overflow-hidden group hover:border-cyber-yellow transition-all duration-300">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-yellow/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                    <div class="w-12 h-12 rounded-xl bg-cyber-yellow/10 text-cyber-yellow flex items-center justify-center mb-6">
+                        <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-3">LINEA DIRETTA EMERGENZE</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        In caso di problemi critici o offline improvvisi, hai un contatto prioritario per ripristinare il servizio in pochissimi minuti.
+                    </p>
+                    <div class="mt-6 flex items-center gap-2 text-[11px] text-cyber-yellow font-mono uppercase font-bold">
+                        <span class="w-2 h-2 rounded-full bg-cyber-yellow animate-ping"></span>
+                        Reperibilità Garantita
+                    </div>
+                </div>
+
+                <!-- Servizio Assistenza 2: Supporto Post-Lancio Gratis -->
+                <div class="bg-cyber-card border border-cyber-border/80 rounded-2xl p-8 relative overflow-hidden group hover:border-cyber-cyan transition-all duration-300">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-cyan/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                    <div class="w-12 h-12 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center mb-6">
+                        <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-3">MANUTENZIONE & UPDATE</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Monitoraggio continuo dei moduli di sicurezza, aggiornamenti periodici del codice e backup automatici per preservare la velocità del sito.
+                    </p>
+                    <div class="mt-6 text-[11px] text-cyber-cyan font-mono uppercase font-bold">
+                        Incluso nei primi 12 mesi
+                    </div>
+                </div>
+
+                <!-- Servizio Assistenza 3: Supporto Diretto -->
+                <div class="bg-cyber-card border border-cyber-border/80 rounded-2xl p-8 relative overflow-hidden group hover:border-cyber-purple transition-all duration-300">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-purple/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                    <div class="w-12 h-12 rounded-xl bg-cyber-purple/10 text-cyber-purple flex items-center justify-center mb-6">
+                        <i data-lucide="coffee" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-3">SUPPORTO DEDICATO</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Hai bisogno di modificare un testo, inserire una foto o cambiare menù? Risolviamo all'istante condividendo lo schermo o tramite contatto rapido.
+                    </p>
+                    <div class="mt-6 text-[11px] text-cyber-purple font-mono uppercase font-bold">
+                        Interventi entro 24 ore
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE CONTATTI -->
+        <section id="contatti" class="py-20 border-t border-cyber-border/60">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-6">
+                    <span class="text-xs uppercase tracking-widest text-cyber-pink font-bold font-display">Iniziamo Adesso?</span>
+                    <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white leading-tight">
+                        PARLIAMO DEL TUO <br>PROSSIMO PROGETTO!
+                    </h2>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-md">
+                        Nessun modulo di contatto da compilare, nessun dato salvato, nessun cookie tracciante installato. Clicca sul canale che preferisci per metterti direttamente in contatto con me. Rispondo entro pochissimi minuti.
+                    </p>
+                    <div class="p-4 rounded-2xl bg-cyber-card border border-cyber-border flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
+                            <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <span class="block text-sm font-bold text-white">Sviluppo flessibile</span>
+                            <span class="block text-xs text-gray-400">Pianifichiamo sessioni dedicate da remoto o incontri di persona.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottoni Pillola Grandi con Bagliori Neon -->
+                <div class="lg:col-span-7 space-y-4">
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/393925309506?text=Ciao!%20Ho%20visto%20il%20tuo%20sito%20web%20e%20vorrei%20informazioni%20per%20un%20progetto" target="_blank" rel="noopener" class="flex items-center justify-between p-6 rounded-full bg-cyber-card border border-emerald-500/20 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300 group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                                <i data-lucide="message-square" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-emerald-400 uppercase tracking-widest font-bold">Risposta Istantanea</span>
+                                <span class="block text-lg font-display font-extrabold text-white">Chiedi su WhatsApp</span>
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-2 transition-all"></i>
+                    </a>
+
+                    <!-- Email -->
+                    <a href="mailto:michelerucci64@gmail.com?subject=Richiesta%20Sviluppo%20Software" class="flex items-center justify-between p-6 rounded-full bg-cyber-card border border-cyber-cyan/20 hover:border-cyber-cyan hover:shadow-lg hover:shadow-cyber-cyan/10 transition-all duration-300 group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
+                                <i data-lucide="mail" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-cyber-cyan uppercase tracking-widest font-bold">Scrivimi via Mail</span>
+                                <span class="block text-lg font-display font-extrabold text-white">michelerucci64@gmail.com</span>
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-500 group-hover:text-cyber-cyan group-hover:translate-x-2 transition-all"></i>
+                    </a>
+
+                    <!-- Telefono -->
+                    <a href="tel:+393925309506" class="flex items-center justify-between p-6 rounded-full bg-cyber-card border border-cyber-purple/20 hover:border-cyber-purple hover:shadow-lg hover:shadow-cyber-purple/10 transition-all duration-300 group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-cyber-purple/10 text-cyber-purple flex items-center justify-center">
+                                <i data-lucide="phone" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-cyber-purple uppercase tracking-widest font-bold">Chiamata Diretta</span>
+                                <span class="block text-lg font-display font-extrabold text-white">+39 392 530 9506</span>
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-500 group-hover:text-cyber-purple group-hover:translate-x-2 transition-all"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-16 border-t border-cyber-border/80 bg-[#050609] py-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-left space-y-2">
+                <span class="font-display font-bold text-white text-sm uppercase tracking-wider">MICHELE RUCCI | Sviluppatore Web &amp; Software</span>
+                <p class="text-[11px] text-gray-500">© 2026 Michele Rucci. Tutti i diritti riservati. P.IVA / Informazioni Legali conformi.</p>
+            </div>
+            
+            <div class="flex items-center gap-2 text-[11px] text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-4 py-2 rounded-full">
+                <i data-lucide="shield" class="w-4 h-4"></i>
+                <span>Sito Web Ecologico &amp; Conforme GDPR senza Banner (Zero Cookie Installati)</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Inizializza le icone Lucide
+        lucide.createIcons();
+
+        // Intro animation — scroll lock + centering
+        const intro = document.getElementById('intro');
+
+        // Blocca lo scroll mentre l'intro è attivo
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+
+        const startHide = () => {
+            intro.classList.add('hide');
+            // Riabilita lo scroll quando l'overlay esce
+            setTimeout(() => {
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
+                intro.remove();
+            }, 1100);
+        };
+
+        if (document.readyState === 'complete') {
+            setTimeout(startHide, 2800);
+        } else {
+            window.addEventListener('load', () => setTimeout(startHide, 2800));
+        }
+
+        // Email copy-to-clipboard
+        document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                navigator.clipboard.writeText('michelerucci64@gmail.com').then(() => {
+                    const span = link.querySelector('.text-lg');
+                    if (span) {
+                        const t = span.textContent;
+                        span.textContent = '✓ Email copiata!';
+                        link.classList.add('border-cyber-cyan', 'shadow-cyber-cyan/20');
+                        setTimeout(() => { span.textContent = t; link.classList.remove('border-cyber-cyan','shadow-cyber-cyan/20'); }, 2000);
+                    }
+                });
+            });
+        });
+
+        // Burger menu mobile
+        const brg = document.getElementById('mob-brg');
+        const mmenu = document.getElementById('mob-menu');
+        brg.addEventListener('click', () => {
+            brg.classList.toggle('open');
+            mmenu.classList.toggle('open');
+        });
+        document.querySelectorAll('[data-mob]').forEach(a => {
+            a.addEventListener('click', () => {
+                brg.classList.remove('open');
+                mmenu.classList.remove('open');
+            });
+        });
+
+        // Gallery pannelli espandibili
+        document.querySelectorAll('.i4-panel').forEach(p => {
+            p.addEventListener('click', () => {
+                const isOpen = p.classList.contains('open');
+                document.querySelectorAll('.i4-panel').forEach(x => x.classList.remove('open'));
+                if (!isOpen) p.classList.add('open');
+            });
+        });
+        document.querySelectorAll('.i4-link').forEach(l => l.addEventListener('click', e => e.stopPropagation()));
+    </script>
+</body>
+</html>
