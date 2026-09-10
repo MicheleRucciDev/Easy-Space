@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasySpace</title>
+    <title>EasySpace | Sviluppo di soluzioni digitali</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Space Grotesk per intestazioni futuristiche + Inter per leggibilità -->
@@ -129,16 +130,21 @@
     * { scrollbar-width: thin; scrollbar-color: #b624ff #07080d; }
 
     /* ── MOBILE MENU ── */
-    #mob-menu{position:fixed;inset:0;z-index:200;background:rgba(7,8,13,.97);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+    #mob-menu{position:fixed;top:0;right:0;bottom:0;width:min(360px,88vw);z-index:200;background:rgba(7,8,13,.98);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:1.5rem;padding:7rem 2rem 2rem;box-shadow:-20px 0 60px rgba(0,0,0,.35);transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
     #mob-menu.open{transform:none}
-    .mob-lnk{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:#4b5563;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;transition:color .2s}
+    .mob-lnk{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:800;color:#6b7280;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;padding:.8rem 0;border-bottom:1px solid rgba(255,255,255,.08);transition:color .2s,transform .2s}
     .mob-lnk:hover{color:#fff}
-    #mob-brg{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+    #mob-brg{display:flex;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
     #mob-brg span{width:22px;height:2px;background:#fff;border-radius:2px;display:block;transition:.35s cubic-bezier(.16,1,.3,1)}
     #mob-brg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
     #mob-brg.open span:nth-child(2){opacity:0;transform:translateX(-8px)}
     #mob-brg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
-    @media(max-width:768px){#mob-brg{display:flex;position:fixed;top:1.2rem;right:1.4rem;z-index:400}}
+
+    /* ── BACK TO TOP ── */
+    #back-to-top{position:fixed;right:1.5rem;bottom:1.5rem;z-index:100;width:42px;height:42px;border:1px solid rgba(182,36,255,.35);border-radius:50%;background:rgba(15,17,26,.78);backdrop-filter:blur(12px);color:rgba(255,255,255,.65);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .25s,transform .25s,color .25s,border-color .25s,background .25s}
+    #back-to-top.visible{opacity:1;pointer-events:auto;transform:none}
+    #back-to-top:hover{color:#fff;border-color:#b624ff;background:rgba(182,36,255,.18)}
+    @media(max-width:640px){#back-to-top{right:1rem;bottom:1rem;width:38px;height:38px}}
 
     /* ── INTRO ANIMATION ── */
     #intro {
@@ -240,35 +246,26 @@
                 </div>
             </a>
             
-            <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                <a href="#chi-sono" class="hover:text-white transition-colors">Chi Sono</a>
-                <a href="#servizi" class="hover:text-cyber-pink transition-colors">Servizi</a>
-                <a href="#processo" class="hover:text-cyber-purple transition-colors">Processo</a>
-                <a href="#template" class="hover:text-cyber-cyan transition-colors">Demo</a>
-                <a href="#assistenza" class="hover:text-cyber-yellow transition-colors">Assistenza</a>
-                <a href="#contatti" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyber-purple to-cyber-pink text-white font-bold hover:shadow-lg hover:shadow-cyber-pink/20 transition-all duration-300">
-                    Contattami
+            <div class="flex items-center gap-3">
+                <a href="#contatti" class="px-4 sm:px-5 py-2.5 rounded-full border border-cyber-purple/35 bg-cyber-card/80 text-gray-200 text-xs sm:text-sm font-bold hover:border-cyber-pink hover:bg-cyber-pink/10 hover:text-white transition-all duration-300">
+                    Contattaci
                 </a>
-            </nav>
-
-            <!-- Burger (mobile) -->
-            <button id="mob-brg" aria-label="Menu">
-                <span></span><span></span><span></span>
-            </button>
+                <button id="mob-brg" aria-label="Apri menu" aria-controls="mob-menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- Mobile menu overlay -->
     <div id="mob-menu">
         <button id="mob-close" data-mob aria-label="Chiudi menu" style="position:absolute;top:1.4rem;right:1.5rem;background:none;border:none;cursor:pointer;color:#fff;font-size:2rem;line-height:1;padding:4px;opacity:.7">✕</button>
-        <a href="#chi-sono"  class="mob-lnk" data-mob>Chi Sono</a>
+        <a href="#team"      class="mob-lnk" data-mob>Chi Siamo</a>
         <a href="#servizi"   class="mob-lnk" data-mob>Servizi</a>
+        <a href="#social"    class="mob-lnk" data-mob>Social</a>
         <a href="#processo"  class="mob-lnk" data-mob>Processo</a>
         <a href="#template"  class="mob-lnk" data-mob>Demo</a>
         <a href="#assistenza" class="mob-lnk" data-mob>Assistenza</a>
-        <a href="#contatti"
-           class="px-8 py-4 rounded-full bg-gradient-to-r from-cyber-purple to-cyber-pink text-white font-extrabold text-sm tracking-widest uppercase"
-           data-mob>Contattami</a>
     </div>
 
     <main class="relative z-10 max-w-7xl mx-auto px-6">
@@ -288,11 +285,6 @@
                     Sviluppo di siti web professionali, app mobile e soluzioni software su misura per aziende e professionisti. Prodotti digitali di alto livello, pensati per distinguere il tuo business.
                 </p>
 
-                <div class="flex flex-wrap gap-4 pt-4">
-                    <a href="#contatti" class="px-8 py-4 rounded-full bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan text-white font-extrabold text-sm tracking-wider uppercase shadow-lg shadow-cyber-pink/25 hover:opacity-90 active:scale-95 transition-all">
-                        Contattami
-                    </a>
-                </div>
             </div>
 
             <!-- Colonna Destra: Nastro Magnetico 3D Vettoriale Animato -->
@@ -344,65 +336,135 @@
                 <div class="h-[2px] w-24 bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan mx-auto mt-4"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
                 <!-- Card 1: Siti Vetrina -->
-                <div class="p-8 bg-cyber-card border rounded-2xl glow-purple hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                <div class="p-7 bg-cyber-card border rounded-2xl glow-purple hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group lg:col-span-2">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-purple/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-                    <div class="w-12 h-12 rounded-xl bg-cyber-purple/10 text-cyber-purple flex items-center justify-center mb-6">
+                    <div class="w-11 h-11 rounded-xl bg-cyber-purple/10 text-cyber-purple flex items-center justify-center mb-5">
                         <i data-lucide="layout" class="w-6 h-6"></i>
                     </div>
-                    <h3 class="font-display font-bold text-lg text-white mb-3">SITI VETRINA EVOLUTI</h3>
+                    <h3 class="font-display font-bold text-base text-white mb-3 whitespace-nowrap">SITI WEB</h3>
                     <p class="text-gray-400 text-xs leading-relaxed">
-                        Design personalizzato d'avanguardia per catturare l'attenzione ed elevare il valore del tuo business sin dal primo click.
+                        Un sito chiaro, veloce e costruito intorno alla tua attività per presentarti bene e ricevere nuovi contatti.
                     </p>
                 </div>
 
                 <!-- Card 2: Web App & E-Commerce -->
-                <div class="p-8 bg-cyber-card border rounded-2xl glow-pink hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                <div class="p-7 bg-cyber-card border rounded-2xl glow-pink hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group lg:col-span-2">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-pink/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-                    <div class="w-12 h-12 rounded-xl bg-cyber-pink/10 text-cyber-pink flex items-center justify-center mb-6">
+                    <div class="w-11 h-11 rounded-xl bg-cyber-pink/10 text-cyber-pink flex items-center justify-center mb-5">
                         <i data-lucide="shopping-bag" class="w-6 h-6"></i>
                     </div>
-                    <h3 class="font-display font-bold text-lg text-white mb-3">WEB APP & E-COMMERCE</h3>
+                    <h3 class="font-display font-bold text-base text-white mb-3 whitespace-nowrap">APP &amp; E-COMMERCE</h3>
                     <p class="text-gray-400 text-xs leading-relaxed">
-                        Piattaforme interattive e negozi online veloci. Ottimizzati per vendere senza intermediari e azzerare le commissioni di terzi.
+                        App e negozi online semplici da usare, pensati per aiutarti a lavorare e vendere in modo più diretto.
                     </p>
                 </div>
 
                 <!-- Card 3: Brand Identity -->
-                <div class="p-8 bg-cyber-card border rounded-2xl glow-cyan hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                <div class="p-7 bg-cyber-card border rounded-2xl glow-cyan hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group lg:col-span-2">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-cyan/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-                    <div class="w-12 h-12 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center mb-6">
+                    <div class="w-11 h-11 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center mb-5">
                         <i data-lucide="sparkles" class="w-6 h-6"></i>
                     </div>
-                    <h3 class="font-display font-bold text-lg text-white mb-3">BRAND IDENTITY DIGITALE</h3>
+                    <h3 class="font-display font-bold text-base text-white mb-3 whitespace-nowrap">IMMAGINE BRAND</h3>
                     <p class="text-gray-400 text-xs leading-relaxed">
-                        Loghi moderni, grafiche coordinate e identità visuale unica per farti ricordare istantaneamente sul mercato.
+                        Logo, colori e grafiche coordinate per rendere il tuo progetto riconoscibile su ogni canale.
                     </p>
                 </div>
 
                 <!-- Card 4: Consulenza Tecnica -->
-                <div class="p-8 bg-cyber-card border rounded-2xl glow-yellow hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                <div class="p-7 bg-cyber-card border rounded-2xl glow-yellow hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group lg:col-span-2 lg:col-start-2">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-yellow/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-                    <div class="w-12 h-12 rounded-xl bg-cyber-yellow/10 text-cyber-yellow flex items-center justify-center mb-6">
+                    <div class="w-11 h-11 rounded-xl bg-cyber-yellow/10 text-cyber-yellow flex items-center justify-center mb-5">
                         <i data-lucide="cpu" class="w-6 h-6"></i>
                     </div>
-                    <h3 class="font-display font-bold text-lg text-white mb-3">CONSULENZA TECNICA</h3>
+                    <h3 class="font-display font-bold text-base text-white mb-3 whitespace-nowrap">SUPPORTO DIGITALE</h3>
                     <p class="text-gray-400 text-xs leading-relaxed">
-                        Risoluzione problemi, hosting gratuito, ottimizzazione SEO e strategie digitali pensate per massimizzare i profitti.
+                        Un aiuto concreto per scegliere gli strumenti giusti, migliorare il tuo sito e far funzionare meglio la tua presenza online.
                     </p>
                 </div>
 
                 <!-- Card 5: SEO & Test -->
-                <div class="p-8 bg-cyber-card border rounded-2xl glow-cyan hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                <div class="p-7 bg-cyber-card border rounded-2xl glow-cyan hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group lg:col-span-2 lg:col-start-4">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-cyber-cyan/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-                    <div class="w-12 h-12 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center mb-6">
+                    <div class="w-11 h-11 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center mb-5">
                         <i data-lucide="search" class="w-6 h-6"></i>
                     </div>
-                    <h3 class="font-display font-bold text-lg text-white mb-3">SEO & OTTIMIZZAZIONE</h3>
+                    <h3 class="font-display font-bold text-base text-white mb-3 whitespace-nowrap">VISIBILITA' ONLINE</h3>
                     <p class="text-gray-400 text-xs leading-relaxed">
-                        Posizionamento Google, structured data, Core Web Vitals e test su ogni dispositivo. Il tuo sito si trova e funziona ovunque.
+                        Facciamo trovare il tuo progetto e verifichiamo che sia facile da usare da telefono, tablet e computer.
                     </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE GESTIONE SOCIAL -->
+        <section id="social" class="py-20 border-t border-cyber-border/60">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-cyber-cyan font-bold font-display">Presenza &amp; Strategia</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white mt-3 leading-tight">IL TUO BRAND,<br><span class="bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan bg-clip-text text-transparent">SEMPRE ONLINE.</span></h2>
+                <div class="h-[2px] w-24 bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Social hub -->
+                <div class="lg:col-span-5 min-h-[430px] rounded-2xl border border-cyber-purple/40 bg-gradient-to-br from-[#171024] via-cyber-card to-[#0b1820] p-8 relative overflow-hidden group">
+                    <div class="absolute -right-24 -top-24 w-72 h-72 rounded-full border border-cyber-pink/20 group-hover:scale-110 transition-transform duration-700"></div>
+                    <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full border border-cyber-cyan/20 group-hover:rotate-45 transition-transform duration-700"></div>
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] text-cyber-purple font-mono tracking-[.25em] uppercase">Social system</span>
+                            <span class="flex items-center gap-2 text-[10px] text-emerald-400 font-mono uppercase"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>Online</span>
+                        </div>
+                        <div class="py-14">
+                            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyber-purple via-cyber-pink to-cyber-cyan p-[1px] mb-7">
+                                <div class="w-full h-full rounded-2xl bg-[#10111a] flex items-center justify-center text-white">
+                                    <i data-lucide="radio-tower" class="w-9 h-9"></i>
+                                </div>
+                            </div>
+                            <h3 class="font-display text-3xl font-extrabold text-white leading-tight">UNA VOCE.<br>PIU' CANALI.</h3>
+                            <p class="text-gray-400 text-xs leading-relaxed mt-4 max-w-xs">Dalla strategia alla pubblicazione, ogni elemento lavora nella stessa direzione.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span aria-label="Instagram" title="Instagram" class="w-10 h-10 rounded-full border border-cyber-pink/30 text-cyber-pink flex items-center justify-center hover:bg-cyber-pink/10 transition-colors">
+                                <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"></circle></svg>
+                            </span>
+                            <span aria-label="Facebook" title="Facebook" class="w-10 h-10 rounded-full border border-cyber-cyan/30 text-cyber-cyan flex items-center justify-center hover:bg-cyber-cyan/10 transition-colors">
+                                <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M14 8h2V4.5c-.35-.05-1.55-.15-2.95-.15-2.92 0-4.92 1.78-4.92 5.05V12H5v3.9h3.13V24h3.84v-8.1h3.18l.5-3.9h-3.68V9.72c0-1.13.31-1.72 2.03-1.72Z"></path></svg>
+                            </span>
+                            <span aria-label="TikTok" title="TikTok" class="w-10 h-10 rounded-full border border-cyber-yellow/30 text-cyber-yellow flex items-center justify-center hover:bg-cyber-yellow/10 transition-colors">
+                                <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true"><path d="M15.8 3c.25 1.9 1.32 3.2 3.2 3.3v3.15a8.1 8.1 0 0 1-3.18-.73v6.45A5.82 5.82 0 1 1 10.8 9.5v3.3a2.5 2.5 0 1 0 2.32 2.37V3h2.68Z"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social services list -->
+                <div class="lg:col-span-7 rounded-2xl border border-cyber-border bg-cyber-card overflow-hidden">
+                    <div class="px-7 py-5 border-b border-cyber-border flex items-center justify-between">
+                        <span class="text-xs text-gray-500 font-mono uppercase tracking-widest">Servizi inclusi</span>
+                    </div>
+
+                    <div class="group flex items-center gap-5 px-7 py-6 border-b border-cyber-border/80 hover:bg-cyber-purple/5 transition-colors">
+                        <div class="w-11 h-11 shrink-0 rounded-xl bg-cyber-purple/10 text-cyber-purple flex items-center justify-center"><i data-lucide="target" class="w-5 h-5"></i></div>
+                        <div class="min-w-0"><h3 class="font-display font-bold text-white">Strategia editoriale</h3><p class="text-gray-500 text-xs mt-1">Tono di voce, rubriche e piano editoriale.</p></div>
+                    </div>
+
+                    <div class="group flex items-center gap-5 px-7 py-6 border-b border-cyber-border/80 hover:bg-cyber-pink/5 transition-colors">
+                        <div class="w-11 h-11 shrink-0 rounded-xl bg-cyber-pink/10 text-cyber-pink flex items-center justify-center"><i data-lucide="pen-tool" class="w-5 h-5"></i></div>
+                        <div class="min-w-0"><h3 class="font-display font-bold text-white">Contenuti e grafiche</h3><p class="text-gray-500 text-xs mt-1">Post, stories e reel coordinati al tuo brand.</p></div>
+                    </div>
+
+                    <div class="group flex items-center gap-5 px-7 py-6 border-b border-cyber-border/80 hover:bg-cyber-cyan/5 transition-colors">
+                        <div class="w-11 h-11 shrink-0 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center"><i data-lucide="calendar-days" class="w-5 h-5"></i></div>
+                        <div class="min-w-0"><h3 class="font-display font-bold text-white">Pubblicazione e community</h3><p class="text-gray-500 text-xs mt-1">Programmazione e gestione delle interazioni.</p></div>
+                    </div>
+
+                    <div class="group flex items-center gap-5 px-7 py-6 hover:bg-cyber-yellow/5 transition-colors">
+                        <div class="w-11 h-11 shrink-0 rounded-xl bg-cyber-yellow/10 text-cyber-yellow flex items-center justify-center"><i data-lucide="chart-no-axes-combined" class="w-5 h-5"></i></div>
+                        <div class="min-w-0"><h3 class="font-display font-bold text-white">Report e ottimizzazione</h3><p class="text-gray-500 text-xs mt-1">Dati chiari per migliorare ogni contenuto.</p></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -422,10 +484,7 @@
                         <i data-lucide="handshake" class="w-10 h-10 text-black"></i>
                     </div>
                     <span class="text-xs text-cyber-cyan font-bold tracking-widest uppercase mb-1">Fase 1</span>
-                    <h4 class="font-display font-bold text-lg text-white mb-2">1. Incontro</h4>
-                    <p class="text-gray-400 text-xs max-w-xs leading-relaxed">
-                        Pianifichiamo un incontro o una videochiamata per analizzare a fondo i tuoi obiettivi di business.
-                    </p>
+                    <h4 class="font-display font-bold text-lg text-white mb-2">Incontro</h4>
                 </div>
 
                 <!-- Step 2 -->
@@ -434,10 +493,7 @@
                         <i data-lucide="lightbulb" class="w-10 h-10 text-black"></i>
                     </div>
                     <span class="text-xs text-cyber-yellow font-bold tracking-widest uppercase mb-1">Fase 2</span>
-                    <h4 class="font-display font-bold text-lg text-white mb-2">2. Idea</h4>
-                    <p class="text-gray-400 text-xs max-w-xs leading-relaxed">
-                        Viene progettata una bozza grafica e funzionale personalizzata, allineata all'identità del tuo brand.
-                    </p>
+                    <h4 class="font-display font-bold text-lg text-white mb-2">Idea</h4>
                 </div>
 
                 <!-- Step 3 -->
@@ -446,10 +502,7 @@
                         <i data-lucide="terminal" class="w-10 h-10 text-white"></i>
                     </div>
                     <span class="text-xs text-cyber-purple font-bold tracking-widest uppercase mb-1">Fase 3</span>
-                    <h4 class="font-display font-bold text-lg text-white mb-2">3. Sviluppo</h4>
-                    <p class="text-gray-400 text-xs max-w-xs leading-relaxed">
-                        Codice pulito, leggero e ultra-veloce. Il progetto viene ottimizzato per ogni dispositivo e browser.
-                    </p>
+                    <h4 class="font-display font-bold text-lg text-white mb-2">Sviluppo</h4>
                 </div>
 
                 <!-- Step 4 -->
@@ -458,10 +511,7 @@
                         <i data-lucide="rocket" class="w-10 h-10 text-white"></i>
                     </div>
                     <span class="text-xs text-cyber-pink font-bold tracking-widest uppercase mb-1">Fase 4</span>
-                    <h4 class="font-display font-bold text-lg text-white mb-2">4. Lancio</h4>
-                    <p class="text-gray-400 text-xs max-w-xs leading-relaxed">
-                        Il progetto viene pubblicato, ottimizzato per i motori di ricerca e consegnato pronto a ricevere contatti.
-                    </p>
+                    <h4 class="font-display font-bold text-lg text-white mb-2">Lancio</h4>
                 </div>
             </div>
         </section>
@@ -475,50 +525,62 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="bg-cyber-card border border-cyber-border rounded-2xl overflow-hidden opacity-60">
+                <!-- Card 1: Corner Hamburgeria -->
+                <div class="bg-cyber-card border border-cyber-yellow/40 rounded-2xl overflow-hidden group hover:border-cyber-yellow hover:shadow-lg hover:shadow-cyber-yellow/10 transition-all duration-300">
                     <div class="p-4 bg-[#11131e] border-b border-cyber-border flex items-center justify-between">
                         <div class="flex items-center gap-1.5">
-                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
-                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
-                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-cyber-yellow"></span>
+                            <span class="w-3 h-3 rounded-full bg-cyber-yellow/60"></span>
+                            <span class="w-3 h-3 rounded-full bg-cyber-yellow/30"></span>
                         </div>
-                        <span class="text-[10px] text-gray-600 font-mono">prossimamente...</span>
                         <div class="w-4"></div>
                     </div>
-                    <div class="p-6 h-56 bg-gradient-to-br from-[#120f26] to-[#07080d] flex flex-col justify-between relative overflow-hidden">
-                        <div class="absolute -right-12 -bottom-12 w-44 h-44 bg-cyber-purple/10 rounded-full filter blur-2xl"></div>
-                        <div class="space-y-3">
-                            <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Progetto in arrivo</span>
-                            <h4 class="font-display font-extrabold text-lg text-gray-600">— — — — — —</h4>
-                            <p class="text-gray-600 text-xs max-w-[200px]">Il primo progetto reale sarà pubblicato qui non appena completato.</p>
+                    <div class="p-6 min-h-[500px] bg-gradient-to-br from-[#2b210d] via-[#17130c] to-[#07080d] flex flex-col items-center justify-between text-center relative overflow-hidden">
+                        <div class="absolute -right-12 -bottom-12 w-56 h-56 bg-cyber-yellow/15 rounded-full filter blur-2xl"></div>
+                        <div class="absolute top-10 -left-16 w-40 h-40 border border-cyber-yellow/10 rounded-full"></div>
+                        <div class="relative z-10 flex w-full flex-col items-center gap-5 pt-2">
+                            <div class="w-full h-72 sm:h-80 flex items-center justify-center">
+                                <img src="Clienti/cornerLogo.jpg" alt="Logo Corner Hamburgeria" class="w-full h-full object-contain drop-shadow-2xl">
+                            </div>
+                            <div>
+                                <h4 class="font-display font-extrabold text-2xl text-white">CORNER HAMBURGERIA</h4>
+                                <p class="text-gray-400 text-xs mt-2 max-w-[260px]">Menù digitale, prenotazioni e identità visiva per il pub di Piazza Duomo.</p>
+                            </div>
                         </div>
-                        <div class="flex justify-between items-center z-10">
-                            <span class="text-[10px] text-cyber-purple/50 bg-cyber-purple/5 px-2 py-1 rounded font-bold uppercase">Disponibile a breve</span>
+                        <div class="w-full flex justify-end items-center z-10 pt-5">
+                            <a href="https://www.cornerpubgiovinazzo.com/" target="_blank" rel="noopener" aria-label="Visita il sito di Corner Hamburgeria" class="text-gray-400 group-hover:text-cyber-yellow group-hover:translate-x-1 transition-all">
+                                <i data-lucide="external-link" class="w-4 h-4"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="bg-cyber-card border border-cyber-border rounded-2xl overflow-hidden opacity-60">
+                <!-- Card 2: Giovinazzo Sunset Run -->
+                <div class="bg-cyber-card border border-orange-500/40 rounded-2xl overflow-hidden group hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-300">
                     <div class="p-4 bg-[#11131e] border-b border-cyber-border flex items-center justify-between">
                         <div class="flex items-center gap-1.5">
-                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
-                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
-                            <span class="w-3 h-3 rounded-full bg-gray-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-orange-500/60"></span>
+                            <span class="w-3 h-3 rounded-full bg-orange-500/30"></span>
                         </div>
-                        <span class="text-[10px] text-gray-600 font-mono">prossimamente...</span>
-                        <div class="w-4"></div>
+                   
                     </div>
-                    <div class="p-6 h-56 bg-gradient-to-br from-[#240c1a] to-[#07080d] flex flex-col justify-between relative overflow-hidden">
-                        <div class="absolute -right-12 -bottom-12 w-44 h-44 bg-cyber-pink/10 rounded-full filter blur-2xl"></div>
-                        <div class="space-y-3">
-                            <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Progetto in arrivo</span>
-                            <h4 class="font-display font-extrabold text-lg text-gray-600">— — — — — —</h4>
-                            <p class="text-gray-600 text-xs max-w-[200px]">Nuovi progetti vengono aggiunti man mano che vengono completati.</p>
+                    <div class="p-6 min-h-[500px] bg-gradient-to-br from-[#172c4b] via-[#101c31] to-[#07080d] flex flex-col items-center justify-between text-center relative overflow-hidden">
+                        <div class="absolute -right-12 -bottom-12 w-56 h-56 bg-orange-500/15 rounded-full filter blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
+                        <div class="relative z-10 flex w-full flex-col items-center gap-5 pt-2">
+                            <div class="w-full h-72 sm:h-80 flex items-center justify-center">
+                                <img src="Clienti/SunRunClubLogo.png" alt="Logo Giovinazzo Sunset Run" class="w-full h-full object-contain drop-shadow-2xl">
+                            </div>
+                            <div>
+                                <h4 class="font-display font-extrabold text-2xl text-white">GIOVINAZZO SUNSET RUN</h4>
+                                <p class="text-gray-400 text-xs mt-2 max-w-[260px]">Landing page e identità digitale per la corsa al tramonto sul lungomare di Giovinazzo.</p>
+                            </div>
                         </div>
-                        <div class="flex justify-between items-center z-10">
-                            <span class="text-[10px] text-cyber-pink/50 bg-cyber-pink/5 px-2 py-1 rounded font-bold uppercase">Disponibile a breve</span>
+                        <div class="w-full flex justify-end items-center z-10 pt-5">
+                            <a href="https://run-club-olive.vercel.app/" target="_blank" rel="noopener" aria-label="Visita il sito di Giovinazzo Sunset Run" class="text-gray-400 group-hover:text-orange-400 group-hover:translate-x-1 transition-all">
+                                <i data-lucide="external-link" class="w-4 h-4"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -534,7 +596,7 @@
                         <span class="text-[10px] text-gray-600 font-mono">prossimamente...</span>
                         <div class="w-4"></div>
                     </div>
-                    <div class="p-6 h-56 bg-gradient-to-br from-[#0c1d24] to-[#07080d] flex flex-col justify-between relative overflow-hidden">
+                    <div class="p-6 min-h-[500px] bg-gradient-to-br from-[#0c1d24] to-[#07080d] flex flex-col justify-between relative overflow-hidden">
                         <div class="absolute -right-12 -bottom-12 w-44 h-44 bg-cyber-cyan/10 rounded-full filter blur-2xl"></div>
                         <div class="space-y-3">
                             <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Progetto in arrivo</span>
@@ -603,6 +665,63 @@
                         <a href="https://resturant-demot.netlify.app/" target="_blank" rel="noopener" class="i4-link">Vedi il demo →</a>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE PROFILI -->
+        <section id="team" class="py-20 border-t border-cyber-border/60">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="text-xs uppercase tracking-widest text-cyber-purple font-bold font-display">Competenze &amp; Metodo</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white mt-3">CHI C'E' DIETRO</h2>
+                <div class="h-[2px] w-24 bg-gradient-to-r from-cyber-purple via-cyber-pink to-cyber-cyan mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Profilo Michele -->
+                <article class="w-full max-w-md mx-auto bg-cyber-card border border-cyber-purple/30 rounded-2xl overflow-hidden group hover:border-cyber-purple transition-all duration-300">
+                    <div class="aspect-square bg-gradient-to-br from-[#1d1230] to-[#07080d] relative overflow-hidden flex justify-center">
+                        <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-cyber-purple/15 blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+                        <img src="infoPersonali/RITRATTO-ELEGANTE.png" alt="Michele Rucci" class="relative z-10 h-full w-full object-cover object-center transition-transform duration-500">
+                    </div>
+                    <div class="p-7">
+                        <div class="flex items-start justify-between gap-4 mb-4">
+                            <div>
+                                <h3 class="font-display text-2xl font-extrabold text-white">MICHELE RUCCI</h3>
+                                <p class="text-cyber-purple text-xs font-bold uppercase tracking-widest mt-1">Sviluppo digitale</p>
+                            </div>
+                            <i data-lucide="server-cog" class="w-6 h-6 shrink-0 text-cyber-purple"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Trasformo idee e bisogni in siti web, applicazioni e contenuti coordinati per raccontare il tuo progetto in modo chiaro e professionale.</p>
+                        <div class="flex flex-wrap gap-2 mt-5">
+                            <span class="text-[10px] text-gray-300 border border-cyber-purple/25 rounded-full px-3 py-1">Siti web</span>
+                            <span class="text-[10px] text-gray-300 border border-cyber-purple/25 rounded-full px-3 py-1">App su misura</span>
+                            <span class="text-[10px] text-gray-300 border border-cyber-purple/25 rounded-full px-3 py-1">Creazione contenuti</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Profilo Francesco -->
+                <article class="w-full max-w-md mx-auto bg-cyber-card border border-cyber-cyan/30 rounded-2xl overflow-hidden group hover:border-cyber-cyan transition-all duration-300">
+                    <div class="aspect-square bg-gradient-to-br from-[#0b2631] to-[#07080d] relative overflow-hidden flex justify-center">
+                        <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-cyber-cyan/15 blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+                        <img src="infoPersonali/SanfImg2.png" alt="Francesco Sanfelice di Bagnoli" class="relative z-10 h-full w-full object-cover object-center transition-transform duration-500">
+                    </div>
+                    <div class="p-7">
+                        <div class="flex items-start justify-between gap-4 mb-4">
+                            <div>
+                                <h3 class="font-display text-2xl font-extrabold text-white">FRANCESCO SANFELICE</h3>
+                                <p class="text-cyber-cyan text-xs font-bold uppercase tracking-widest mt-1">App &amp; piattaforme</p>
+                            </div>
+                            <i data-lucide="cpu" class="w-6 h-6 shrink-0 text-cyber-cyan"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Creo applicazioni semplici da usare e organizzo la presenza online, dalla gestione dei contenuti alla pubblicazione sui social.</p>
+                        <div class="flex flex-wrap gap-2 mt-5">
+                            <span class="text-[10px] text-gray-300 border border-cyber-cyan/25 rounded-full px-3 py-1">App e piattaforme</span>
+                            <span class="text-[10px] text-gray-300 border border-cyber-cyan/25 rounded-full px-3 py-1">Gestione social</span>
+                            <span class="text-[10px] text-gray-300 border border-cyber-cyan/25 rounded-full px-3 py-1">Contenuti digitali</span>
+                        </div>
+                    </div>
+                </article>
             </div>
         </section>
 
@@ -675,7 +794,7 @@
                         PARLIAMO DEL TUO <br>PROSSIMO PROGETTO!
                     </h2>
                     <p class="text-gray-400 text-sm leading-relaxed max-w-md">
-                        Nessun modulo di contatto da compilare, nessun dato salvato, nessun cookie tracciante installato. Clicca sul canale che preferisci per metterti direttamente in contatto con me. Rispondo entro pochissimi minuti.
+                        Nessun modulo di contatto da compilare, nessun dato salvato, nessun cookie tracciante installato. Clicca sul canale che preferisci per metterti direttamente in contatto con noi. Rispondiamo entro pochissimi minuti.
                     </p>
                     <div class="p-4 rounded-2xl bg-cyber-card border border-cyber-border flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
@@ -752,6 +871,10 @@
         </div>
     </footer>
 
+    <button id="back-to-top" aria-label="Torna su" title="Torna su">
+        <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    </button>
+
     <script>
         // Inizializza le icone Lucide
         lucide.createIcons();
@@ -799,14 +922,26 @@
         const brg = document.getElementById('mob-brg');
         const mmenu = document.getElementById('mob-menu');
         brg.addEventListener('click', () => {
-            brg.classList.toggle('open');
-            mmenu.classList.toggle('open');
+            const isOpen = !mmenu.classList.contains('open');
+            brg.classList.toggle('open', isOpen);
+            mmenu.classList.toggle('open', isOpen);
+            brg.setAttribute('aria-expanded', String(isOpen));
         });
         document.querySelectorAll('[data-mob]').forEach(a => {
             a.addEventListener('click', () => {
                 brg.classList.remove('open');
                 mmenu.classList.remove('open');
+                brg.setAttribute('aria-expanded', 'false');
             });
+        });
+
+        // Back to top discreto, visibile solo dopo lo scroll iniziale.
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 480);
+        }, { passive: true });
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         // Gallery pannelli espandibili
